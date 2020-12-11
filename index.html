@@ -8,36 +8,36 @@
           background: rgb(235, 215, 170);
      }
      #giftbox {
-          width: 50px;
-          height: 50px;
           position: absolute;
      }
 </style>
 <body>
 
-     <h1> Welcome </h1>
+     <div id="title"><h1> Welcome </h1></div>
      <p>
           <button onclick="animate()">Click Me</button>
      </p>
 
      <div id="animContainer">
           <div id="giftbox">
-               <img src="https://user-images.githubusercontent.com/75823345/101863524-909c2f80-3b41-11eb-834e-226723d78f86.png" alt="giftbox" width="50px" height="50px">
+               <img src="https://user-images.githubusercontent.com/75823345/101863524-909c2f80-3b41-11eb-834e-226723d78f86.png" alt="giftbox" width="85px" height="75px">
           </div>
      </div>
 
      <script>
           function animate() {
+               var title = document.getElementById("title");
                var container = document.getElementById("animContainer");
                var giftbox = document.getElementById("giftbox");
                var posX = 0;
                var posY = 0;
                var pos = [posX, posY]
                /* Set bounds */
-               var endX = parseInt(container.style.width.substring(0,container.style.width.length-2));
-               endX -= parseInt(giftbox.style.width.substring(0,giftbox.style.width.length-2));
-               var endY = parseInt(container.style.height.substring(0,container.style.height.length-2));
-               endY -= parseInt(giftbox.style.height.substring(0,giftbox.style.height.length-2));
+               var endX = parseInt(window.getComputedStyle(container).getPropertyValue("width").substring(0,window.getComputedStyle(container).getPropertyValue("width").length-2));
+               endX -= parseInt(window.getComputedStyle(giftbox).getPropertyValue("width").substring(0,window.getComputedStyle(giftbox).getPropertyValue("width").length-2));
+               var endY = parseInt(window.getComputedStyle(container).getPropertyValue("height").substring(0,window.getComputedStyle(container).getPropertyValue("height").length-2));
+               endY -= parseInt(window.getComputedStyle(giftbox).getPropertyValue("height").substring(0,window.getComputedStyle(giftbox).getPropertyValue("height").length-2));
+
                /* Define bounds */
                var bounds = [endX,endY,0,0];
                /* Specify path of object (0: right, 1: down, 2: left, 3: up) */
@@ -50,20 +50,19 @@
                     // If object hits edge, either horizontal or vertical
                     if (pos[curDir%2]==bounds[curDir]) { 
                          step++;
-                         if (step == path.length) { // reached end of animation
+                         if (step >= path.length) { // reached end of animation
                               clearInterval(id); // stop moving
                          }
                          else {
                               curDir = path[step]; // change direction
                          }
+                         console.log("New step: " + step);
                     }
                     else { // did not hit edge
                          if(curDir < 2) // right or up: +
                               pos[curDir%2]++;
                          else           // left or down: -
                               pos[curDir%2]--;
-                         
-                         
                     }
                     // Set new position coordinates of object
                     giftbox.style.top = pos[1] + 'px'; 
