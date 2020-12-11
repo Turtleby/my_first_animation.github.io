@@ -5,40 +5,69 @@
           width: 500px;
           height: 500px;
           position: relative;
-          background: rgb(235, 232, 170);
+          background: rgb(235, 215, 170);
      }
-     #animatedObj {
+     #giftbox {
           width: 50px;
           height: 50px;
           position: absolute;
-          background: black;
      }
 </style>
 <body>
 
      <h1> Welcome </h1>
      <p>
-          <button onclick="move()">Click Me</button>
+          <button onclick="animate()">Click Me</button>
      </p>
-     
+
      <div id="animContainer">
-          <div id="animatedObj"></div>
+          <div id="giftbox">
+               <img src="https://user-images.githubusercontent.com/75823345/101863524-909c2f80-3b41-11eb-834e-226723d78f86.png" alt="giftbox">
+          </div>
      </div>
 
      <script>
-          function move() {
-               var elem = document.getElementById("animatedObj");
-               var pos = 0;
+          function animate() {
+               var container = document.getElementById("animContainer");
+               var giftbox = document.getElementById("giftbox");
+               var posX = 0;
+               var posY = 0;
+               var pos = [posX, posY]
+               /* Set bounds */
+               var endX = parseInt(container.style.width.substring(0,container.style.width.length-2));
+               endX -= parseInt(giftbox.style.width.substring(0,giftbox.style.width.length-2));
+               var endY = parseInt(container.style.height.substring(0,container.style.height.length-2));
+               endY -= parseInt(giftbox.style.height.substring(0,giftbox.style.height.length-2));
+               /* Define bounds */
+               var bounds = [endX,endY,0,0];
+               /* Specify path of object (0: right, 1: down, 2: left, 3: up) */
+               var path = [0,1,2,3]; // right, down, left, up
+               var curDir = path[0]; // current direction of object, set to initial
+               var step = 0; // current index of path
+
                var id = setInterval(frame, 10);
                function frame() {
-                    if (pos == 450) {
-                         clearInterval(id);
+                    // If object hits edge, either horizontal or vertical
+                    if (pos[curDir%2]==bounds[curDir]) { 
+                         step++;
+                         if (step == path.length) { // reached end of animation
+                              clearInterval(id); // stop moving
+                         }
+                         else {
+                              curDir = path[step]; // change direction
+                         }
                     }
-                    else {
-                         pos++;
-                         elem.style.top = pos + 'px';
-                         elem.style.left = pos + 'px';
+                    else { // did not hit edge
+                         if(curDir < 2) // right or up: +
+                              pos[curDir%2]++;
+                         else           // left or down: -
+                              pos[curDir%2]--;
+                         
+                         // Set new position coordinates of object
+                         giftbox.style.top = pos[1] + 'px'; 
+                         giftbox.style.left = pos[0] + 'px';
                     }
+
                }
           }
      </script>
